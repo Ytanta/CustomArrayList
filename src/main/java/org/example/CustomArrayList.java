@@ -44,7 +44,7 @@ public class CustomArrayList<T> {
      * @throws IndexOutOfBoundsException если индекс выходит за пределы допустимого диапазона
      */
     public void add(int index, T element) {
-        checkIndexForAdd(index);
+        checkIndex(index, true);
         resizeIfNeeded();
         System.arraycopy(elements, index, elements, index + 1, size - index);
         elements[index] = element;
@@ -60,7 +60,7 @@ public class CustomArrayList<T> {
      */
     @SuppressWarnings("unchecked")
     public T get(int index) {
-        checkIndex(index);
+        checkIndex(index, false);
         return (T) elements[index];
     }
 
@@ -71,7 +71,7 @@ public class CustomArrayList<T> {
      * @throws IndexOutOfBoundsException если индекс выходит за пределы допустимого диапазона
      */
     public void remove(int index) {
-        checkIndex(index);
+        checkIndex(index, false);
         System.arraycopy(elements, index + 1, elements, index, size - index - 1);
         elements[--size] = null;
     }
@@ -92,7 +92,7 @@ public class CustomArrayList<T> {
      * @throws IndexOutOfBoundsException если индекс выходит за пределы допустимого диапазона
      */
     public void set(int index, T element) {
-        checkIndex(index);
+        checkIndex(index, false);
         elements[index] = element;
     }
 
@@ -128,24 +128,25 @@ public class CustomArrayList<T> {
     }
 
     /**
-     * Проверяет, находится ли индекс в пределах массива (для получения и установки значений).
+     * Проверяет, находится ли индекс в пределах массива.
+     * Используется как для обычных операций (get, remove, set), так и для добавления элемента.
      *
      * @param index индекс для проверки
+     * @param forAdd если true, проверка для добавления элемента (допускает index == size)
      * @throws IndexOutOfBoundsException если индекс выходит за пределы допустимого диапазона
      */
-    private void checkIndex(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException("Индекс " + index + " вне диапазона. Размер: " + size);
+    private void checkIndex(int index, boolean forAdd) {
+        if (index < 0 || index > size || (!forAdd && index == size)) {
+            throwIndexOutOfBounds(index);
         }
     }
 
     /**
-     * Проверяет, находится ли индекс в пределах массива (для добавления элементов).
+     * Выбрасывает исключение IndexOutOfBoundsException с указанием неверного индекса.
      *
-     * @param index индекс для проверки
-     * @throws IndexOutOfBoundsException если индекс выходит за пределы допустимого диапазона
+     * @param index недопустимый индекс
      */
-    private void checkIndexForAdd(int index) {
+    private void throwIndexOutOfBounds(int index) {
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Индекс " + index + " вне диапазона. Размер: " + size);
         }
