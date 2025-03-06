@@ -19,10 +19,15 @@ public class CustomArrayList<T> {
     private int size;
 
     /**
+     * Дефолтный размер
+     */
+    private static final int DEFAULT_CAPACITY = 10;
+
+    /**
      * Создает пустой список.
      */
     public CustomArrayList() {
-        elements = new Object[0];
+        this.elements = new Object[DEFAULT_CAPACITY];
         size = 0;
     }
 
